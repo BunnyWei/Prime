@@ -1,0 +1,75 @@
+﻿@{
+    ViewBag.Title = "Index";
+    ViewBag.naviCenter = "active";
+    ViewBag.pIndexNav = "active";
+}
+
+<div class="container">
+        <div class="row">
+            @Html.Partial("_PCenterLeftNav")
+            <div class="span9 ">
+                <div class="hero-unit ">
+                    <div class="row">
+                        <div class="span3" style="padding-left: 60px">
+                            <img class="img-rounded" src="../img/res.gif/140x140">
+                            <h3>
+                                预约系统</h3>
+                            <p>
+                                预约医生进行诊治</p>
+                            <p>
+                                <a class="btn btn-info" href="@Url.Content("~/PCenter/Res")">进入 &raquo;</a></p>
+                        </div>
+                        <!-- /.span4 -->
+                        <div class="span3 " style="padding-left: 50px">
+                            <img class="img-rounded" src="../img/info.gif/140x140">
+                            <h3>
+                                个人信息</h3>
+                            <p>
+                                查看或修改个人信息
+                            </p>
+                            <p>
+                                <a class="btn btn-info" href="@Url.Content("~/PCenter/Info")">进入 &raquo;</a></p>
+                        </div>
+                        <!-- /.span4 -->
+                        <div class="span3" style="padding-left: 60px">
+                            <img class="img-rounded" src="../img/case.gif/140x140">
+                            <h3>
+                                病历查询</h3>
+                            <p>
+                                查看过往的病历</p>
+                            <p>
+                                <a class="btn btn-info" href="@Url.Content("~/PCenter/Case")">进入 &raquo;</a></p>
+                        </div>
+                        <!-- /.span4 -->
+                        <div class="span3" style="padding-left: 50px">
+                            <img class="img-rounded" src="../img/fee.gif/140x140">
+                            <h3>
+                                账单查询</h3>
+                            <p>
+                                查询治疗项目的内容和账单</p>
+                            <p>
+                                <a class="btn btn-info" href="@Url.Content("~/PCenter/Fee")">进入 &raquo;</a></p>
+                        </div>
+                        <!-- /.span4 -->
+                    </div>
+                    <!-- /.row -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+      <div class="container">
+        <p>由<a target="_blank">Prime</a>团队设计并完成.</p>
+        <p>我们遵循 <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License v2.0</a>, 以及 <a href="http://creativecommons.org/licenses/by/3.0/deed.zh" target="_blank">CC BY 3.0</a>.</p>
+        <p>本网站基于<a href="http://www.bootcss.com/">Bootstrap</a>设计，并全部遵循 <a href="http://creativecommons.org/licenses/by/3.0/deed.zh" target="_blank">CC BY 3.0</a>协议发布。</p>
+        <ul class="footer-links">
+          <li><a href="@Url.Content("~/Index/AboutUs")" target="_blank">关于我们</a></li>
+          <li class="muted">&middot;</li>
+          
+        
+          
+          <li>©2013 <a href="@Url.Content("~/Index/index")" target="_blank">Prime</a>版权所有</li>
+        </ul>
+      </div>
+</footer>

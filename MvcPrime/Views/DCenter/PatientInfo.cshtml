@@ -1,0 +1,177 @@
+﻿@{
+    ViewBag.Title = "PatientInfo";
+    ViewBag.dPatientInfoNav = "active";
+    ViewBag.naviCenter = "active";
+}
+<script type="text/javascript">
+    function getShortDateTimeString(date) {   //如：2011-07-29 13:30:50  
+        var year = date.getFullYear();
+        var month = date.getMonth();
+        var day = date.getDate();
+        month = month + 1;
+        if (month < 10) month = '0' + month;
+        if (day < 10) day = '0' + day;
+        var hour = date.getHours();
+        if (hour < 10) {
+            hour = '0' + hour;
+        }
+        var minute = date.getMinutes();
+        if (minute < 10) {
+            minute = '0' + minute;
+        }
+        var second = date.getSeconds();
+        if (second < 10) {
+            second = '0' + second;
+        }
+        //var str = year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second; 
+        var str = year + '-' + month + '-' + day;
+        return str;
+    }
+
+    function query() { //查询函数
+        $("#querytable").empty();
+        document.getElementById("queryinputdiv").className = "control-group ";
+        $("#queryinputp").html("");
+
+        var xmlhttp;
+        var account_name = $("#queryinput").val();
+
+        if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp = new XMLHttpRequest();
+        } else { // code for IE6, IE5
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function (data) {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+
+                var querydata = JSON.parse(xmlhttp.responseText);
+                if (querydata.code == 0) {
+
+                    document.getElementById("queryinputdiv").className = "control-group error ";
+                    $("#queryinputp").html("<i class=\"icon-exclamation-sign help-block\">" + querydata.msg + "</i>");
+                } else {
+
+                    var querydata = JSON.parse(xmlhttp.responseText);
+                    var caselist = querydata.msg;
+
+
+
+                    var patientname = caselist[0].patient.user_name;
+                    var patientgender = caselist[0].patient.user_gender;
+                    if (patientgender == 1) {
+                        var paintsex = "男";
+                    }
+                    else { paintsex = "女"; }
+                    var birthday = caselist[0].patient.birthday;
+                    var tel = caselist[0].patient.tel;
+                    var id_num = caselist[0].patient.id_num;
+
+                    var unixtime = parseInt(new Date().valueOf(birthday) / 1000);
+                    var normaltime = new Date(unixtime * 1000);
+                    var date = getShortDateTimeString(normaltime);
+                    var casetext = "<tr ><td>" + patientname + "</td><td>" + paintsex + "</td><td>" + date + "</td><td>" + tel + "</td><td>" + id_num + "</td></tr>";
+                    $("#querytable").append(casetext);
+
+
+
+
+                }
+            }
+        }      //回调函数
+
+        xmlhttp.open("get", "getCaseDetialByPAccountName?account_name=" + account_name, true);
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.send();
+    }
+
+
+</script>
+ <div class="container">
+        <div class="row">
+            @Html.Partial("_DCenterLeftNav")
+           <div class="span9 ">
+                <div id="legend" class="">
+                    <legend>
+                        <p style="margin-left: 30px">
+                            患者信息查询
+                        </p>
+                    </legend>
+                </div>
+                <div class="well">
+                <div class="row">
+                 <div class="control-group span3 " style="padding-left: 50px">
+                                <!-- Text input-->
+                                <p>
+                                    名称:
+                                </p>
+                                <div class="controls" id="queryinputdiv">
+                                    <input id="queryinput" type="text" placeholder="请输入患者账号" class="input">
+                                    <p class="help-block" id="queryinputdivp">
+                                    </p>
+                                </div>
+                            </div>
+                
+
+                        <div class="span3" style="padding-top:33px;padding-left:60px">
+
+                        <button class=" btn  btn-info"  onclick= "query()">查询</button>
+
+
+ </div >
+
+
+
+
+
+                </div>
+                    <table class="table table-hover" >
+                        <thead>
+                            <tr>
+                                <th>
+                                    患者姓名
+                                </th>
+                                <th>
+                                    性别
+                                </th>
+                                <th>
+                                    出生日期
+                                </th>
+                                <th>
+                                    联系方式
+                                </th>
+                                <th>
+                                    身份证号
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="querytable">
+                          
+             
+                        </tbody>
+                    </table>
+                <div class="row" style="padding-top: 20px">
+
+                    <div class="span3" style="padding-left: 550px" >
+                        <a class=" btn btn-large btn btn-danger" href="@Url.Content("~/DCenter/Index")">返回</a>
+                    </div>
+                </div>
+            
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="footer">
+      <div class="container">
+        <p>由<a target="_blank">Prime</a>团队设计并完成.</p>
+        <p>我们遵循 <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License v2.0</a>, 以及 <a href="http://creativecommons.org/licenses/by/3.0/deed.zh" target="_blank">CC BY 3.0</a>.</p>
+        <p>本网站基于<a href="http://www.bootcss.com/">Bootstrap</a>设计，并全部遵循 <a href="http://creativecommons.org/licenses/by/3.0/deed.zh" target="_blank">CC BY 3.0</a>协议发布。</p>
+        <ul class="footer-links">
+          <li><a href="@Url.Content("~/Index/AboutUs")" target="_blank">关于我们</a></li>
+          <li class="muted">&middot;</li>
+          
+        
+          
+          <li>©2013 <a href="@Url.Content("~/Index/index")" target="_blank">Prime</a>版权所有</li>
+        </ul>
+      </div>
+</footer>

@@ -1,0 +1,70 @@
+C:\Users\yp\Desktop\Dental Clinic Management System\Dental Clinic Management System\Backup\MvcPrime\bin\MvcPrime.dll
+C:\Users\yp\Desktop\Dental Clinic Management System\Dental Clinic Management System\Backup\MvcPrime\bin\MvcPrime.pdb
+C:\Users\yp\Desktop\Dental Clinic Management System\Dental Clinic Management System\Backup\MvcPrime\bin\EntityFramework.dll
+C:\Users\yp\Desktop\Dental Clinic Management System\Dental Clinic Management System\Backup\MvcPrime\bin\EntityFramework.xml
+C:\Users\yp\Desktop\Dental Clinic Management System\Dental Clinic Management System\Backup\MvcPrime\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\yp\Desktop\Dental Clinic Management System\Dental Clinic Management System\Backup\MvcPrime\obj\Debug\MvcPrime.dll
+C:\Users\yp\Desktop\Dental Clinic Management System\Dental Clinic Management System\Backup\MvcPrime\obj\Debug\MvcPrime.pdb
+C:\Users\yp\Desktop\Backup\MvcPrime\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\yp\Desktop\Backup\MvcPrime\bin\MvcPrime.dll
+C:\Users\yp\Desktop\Backup\MvcPrime\bin\MvcPrime.pdb
+C:\Users\yp\Desktop\Backup\MvcPrime\bin\EntityFramework.dll
+C:\Users\yp\Desktop\Backup\MvcPrime\bin\EntityFramework.xml
+C:\Users\yp\Desktop\Backup\MvcPrime\obj\Debug\MvcPrime.dll
+C:\Users\yp\Desktop\Backup\MvcPrime\obj\Debug\MvcPrime.pdb
+C:\Users\yp\Desktop\prime\MvcPrime\bin\MvcPrime.dll
+C:\Users\yp\Desktop\prime\MvcPrime\bin\MvcPrime.pdb
+C:\Users\yp\Desktop\prime\MvcPrime\bin\EntityFramework.dll
+C:\Users\yp\Desktop\prime\MvcPrime\bin\EntityFramework.xml
+C:\Users\yp\Desktop\prime\MvcPrime\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\yp\Desktop\prime\MvcPrime\obj\Debug\MvcPrime.dll
+C:\Users\yp\Desktop\prime\MvcPrime\obj\Debug\MvcPrime.pdb
+C:\Users\yp\Desktop\实训\prime\MvcPrime\bin\MvcPrime.dll
+C:\Users\yp\Desktop\实训\prime\MvcPrime\bin\MvcPrime.pdb
+C:\Users\yp\Desktop\实训\prime\MvcPrime\bin\EntityFramework.xml
+C:\Users\yp\Desktop\实训\prime\MvcPrime\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\yp\Desktop\实训\prime\MvcPrime\obj\Debug\MvcPrime.dll
+C:\Users\yp\Desktop\实训\prime\MvcPrime\obj\Debug\MvcPrime.pdb
+C:\Documents and Settings\Administrator\桌面\新建文件夹\prime\MvcPrime\bin\MvcPrime.dll
+C:\Documents and Settings\Administrator\桌面\新建文件夹\prime\MvcPrime\bin\MvcPrime.pdb
+C:\Documents and Settings\Administrator\桌面\新建文件夹\prime\MvcPrime\bin\EntityFramework.dll
+C:\Documents and Settings\Administrator\桌面\新建文件夹\prime\MvcPrime\bin\EntityFramework.xml
+C:\Documents and Settings\Administrator\桌面\新建文件夹\prime\MvcPrime\obj\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\Administrator\桌面\新建文件夹\prime\MvcPrime\obj\Debug\MvcPrime.dll
+C:\Documents and Settings\Administrator\桌面\新建文件夹\prime\MvcPrime\obj\Debug\MvcPrime.pdb
+C:\Users\playing\Desktop\prime\MvcPrime\bin\MvcPrime.dll
+C:\Users\playing\Desktop\prime\MvcPrime\bin\MvcPrime.pdb
+C:\Users\playing\Desktop\prime\MvcPrime\obj\Debug\MvcPrime.csprojResolveAssemblyReference.cache
+C:\Users\playing\Desktop\prime\MvcPrime\obj\Debug\MvcPrime.dll
+C:\Users\playing\Desktop\prime\MvcPrime\obj\Debug\MvcPrime.pdb
+C:\Documents and Settings\Administrator\桌面\prime\Backup\MvcPrime\bin\MvcPrime.dll
+C:\Documents and Settings\Administrator\桌面\prime\Backup\MvcPrime\bin\MvcPrime.pdb
+C:\Documents and Settings\Administrator\桌面\prime\Backup\MvcPrime\obj\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\Administrator\桌面\prime\Backup\MvcPrime\obj\Debug\MvcPrime.dll
+C:\Documents and Settings\Administrator\桌面\prime\Backup\MvcPrime\obj\Debug\MvcPrime.pdb
+C:\Users\Kouge\Desktop\prime\Backup\MvcPrime\bin\MvcPrime.dll
+C:\Users\Kouge\Desktop\prime\Backup\MvcPrime\bin\MvcPrime.pdb
+C:\Users\Kouge\Desktop\prime\Backup\MvcPrime\bin\EntityFramework.xml
+C:\Users\Kouge\Desktop\prime\Backup\MvcPrime\obj\Debug\MvcPrime.csprojResolveAssemblyReference.cache
+C:\Users\Kouge\Desktop\prime\Backup\MvcPrime\obj\Debug\MvcPrime.dll
+C:\Users\Kouge\Desktop\prime\Backup\MvcPrime\obj\Debug\MvcPrime.pdb
+C:\Documents and Settings\Administrator\桌面\prime\MvcPrime\bin\MvcPrime.dll
+C:\Documents and Settings\Administrator\桌面\prime\MvcPrime\bin\MvcPrime.pdb
+C:\Documents and Settings\Administrator\桌面\prime\MvcPrime\obj\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\Administrator\桌面\prime\MvcPrime\obj\Debug\MvcPrime.dll
+C:\Documents and Settings\Administrator\桌面\prime\MvcPrime\obj\Debug\MvcPrime.pdb
+C:\Documents and Settings\Administrator\桌面\新建文件夹 (2)\prime\MvcPrime\bin\MvcPrime.dll
+C:\Documents and Settings\Administrator\桌面\新建文件夹 (2)\prime\MvcPrime\bin\MvcPrime.pdb
+C:\Documents and Settings\Administrator\桌面\新建文件夹 (2)\prime\MvcPrime\obj\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\Administrator\桌面\新建文件夹 (2)\prime\MvcPrime\obj\Debug\MvcPrime.dll
+C:\Documents and Settings\Administrator\桌面\新建文件夹 (2)\prime\MvcPrime\obj\Debug\MvcPrime.pdb
+C:\Users\Kouge\Desktop\新建文件夹 (2)\prime\MvcPrime\bin\MvcPrime.dll
+C:\Users\Kouge\Desktop\新建文件夹 (2)\prime\MvcPrime\bin\MvcPrime.pdb
+C:\Users\Kouge\Desktop\新建文件夹 (2)\prime\MvcPrime\obj\Debug\MvcPrime.csprojResolveAssemblyReference.cache
+C:\Users\Kouge\Desktop\新建文件夹 (2)\prime\MvcPrime\obj\Debug\MvcPrime.dll
+C:\Users\Kouge\Desktop\新建文件夹 (2)\prime\MvcPrime\obj\Debug\MvcPrime.pdb
+C:\Users\Kouge\Desktop\prime\prime\MvcPrime\bin\MvcPrime.dll
+C:\Users\Kouge\Desktop\prime\prime\MvcPrime\bin\MvcPrime.pdb
+C:\Users\Kouge\Desktop\prime\prime\MvcPrime\obj\Debug\MvcPrime.csprojResolveAssemblyReference.cache
+C:\Users\Kouge\Desktop\prime\prime\MvcPrime\obj\Debug\MvcPrime.dll
+C:\Users\Kouge\Desktop\prime\prime\MvcPrime\obj\Debug\MvcPrime.pdb

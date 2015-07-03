@@ -1,0 +1,106 @@
+﻿@{
+    ViewBag.Title = "BaseMaterial";
+    ViewBag.naviCenter = "active";
+    ViewBag.aBaseMaterialNav = "active";
+}
+<script type="text/javascript">
+
+    window.onload = function () {
+        var xmlhttp;
+        if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp = new XMLHttpRequest();
+        } else { // code for IE6, IE5
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function (data) {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                var basedata = JSON.parse(xmlhttp.responseText);
+                baselist = basedata.msg;
+                if (basedata.code == 0) {
+
+                } else {
+
+                    for (var i = 0; i < baselist.length; i++) {
+
+                        var device_id = baselist[i].medical_devices_id;
+
+                        var device_name = baselist[i].medical_devices_name;
+                        var device_amount = baselist[i].amount;
+                        var device_price = baselist[i].unitprice;
+                        var devicetext = "<tr id=\"" + device_id + "\"><td>" + device_id + "</td><td>" + device_name + "</td><td>" + device_amount + "</td><td>" + device_price + "</td></tr>";
+                        $("#devicetable").append(devicetext);
+                    }
+
+                }
+
+            }
+
+        } //回调函数
+
+        xmlhttp.open("get", "getDevice12", true);
+        xmlhttp.send();
+    }
+
+
+</script>
+
+<div class="container">
+    <div class="row">
+        @Html.Partial("_ACenterLeftNav")
+        <div class="span9 ">
+            <div id="legend" class="">
+                <legend>
+                    <p style="margin-left: 30px">
+                        基础材料管理
+                    </p>
+                </legend>
+            </div>
+            <div class="well">
+                <div style="padding-top: 30px">
+                    <table class="table table-hover table-striped table-bordered" contenteditable="false" id="devicetable_tabale">
+                        <thead>
+                            <tr>
+                                <th>
+                                    编号
+                                </th>
+                                <th>
+                                    名称
+                                </th>
+                                <th>
+                                    数量
+                                </th>
+                                <th>
+                                    单价
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="devicetable">
+                            
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row" style="padding-top: 20px">
+                    
+                    <div class="span3">
+                        <a class=" btn btn-large btn-danger" href="@Url.Content("~/ACenter/Index")" >返回</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer class="footer">
+      <div class="container">
+        <p>由<a target="_blank">Prime</a>团队设计并完成.</p>
+        <p>我们遵循 <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License v2.0</a>, 以及 <a href="http://creativecommons.org/licenses/by/3.0/deed.zh" target="_blank">CC BY 3.0</a>.</p>
+        <p>本网站基于<a href="http://www.bootcss.com/">Bootstrap</a>设计，并全部遵循 <a href="http://creativecommons.org/licenses/by/3.0/deed.zh" target="_blank">CC BY 3.0</a>协议发布。</p>
+        <ul class="footer-links">
+          <li><a href="@Url.Content("~/Index/AboutUs")" target="_blank">关于我们</a></li>
+          <li class="muted">&middot;</li>
+          
+        
+          
+          <li>©2013 <a href="@Url.Content("~/Index/index")" target="_blank">Prime</a>版权所有</li>
+        </ul>
+      </div>
+</footer>

@@ -1,0 +1,244 @@
+﻿@{
+    ViewBag.Title = "Fee";
+    ViewBag.naviCenter = "active";
+    ViewBag.pFeeNav = "active";
+}
+<script type="text/javascript">
+    var patient_id; //存储用户id
+    //获取cookie中user_id的值
+    var strCookie = document.cookie;
+    var arrCookie = strCookie.split("&");
+    for (var i = 0; i < arrCookie.length; i++) {
+        var arr = arrCookie[i].split("=");
+        if ("user_id" == arr[0]) {
+            patient_id = arr[1];
+        }
+    }
+
+    function getShortDateTimeString(date) {   //如：2011-07-29 13:30:50  
+        var year = date.getFullYear();
+        var month = date.getMonth();
+        var day = date.getDate();
+        month = month + 1;
+        if (month < 10) month = '0' + month;
+        if (day < 10) day = '0' + day;
+        var hour = date.getHours();
+        if (hour < 10) {
+            hour = '0' + hour;
+        }
+        var minute = date.getMinutes();
+        if (minute < 10) {
+            minute = '0' + minute;
+        }
+        var second = date.getSeconds();
+        if (second < 10) {
+            second = '0' + second;
+        }
+        //var str = year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second; 
+        var str = year + '-' + month + '-' + day;
+        return str;
+    }
+
+   
+//    function getchargelist() {
+//                var xmlhttp;
+//                if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
+//                    xmlhttp = new XMLHttpRequest();
+//                } else { // code for IE6, IE5
+//                    xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+//                }
+//                xmlhttp.onreadystatechange = function (data) {
+//                    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+//                        var querydata = JSON.parse(xmlhttp.responseText);
+//                        var caselist = querydata.msg;
+//                        var moneyin = 0;
+//                        for (var i = 0; i < caselist.length; i++) {
+//                            var treatid = "treat" + i
+//                  
+//                        
+//                            var treatprice = caselist[i].balance;
+//                      
+//                            var casetext = "<tr id=\"" + treatid + "\"><td>2013-7-8</td><td>缴费</td><td>" + treatprice + "</td></tr>";
+//                            $("#moneytable").append(casetext);
+//                            moneyin = moneyin + treatprice ;
+
+//                        }
+//                        $("#moneyin").html(moneyin);
+//                    }
+//                } //回调函数
+
+//                xmlhttp.open("get", "SearchCharge?patientID=" + patient_id, true);
+//                xmlhttp.send();
+//    }
+    window.onload = function () {
+        
+        var xmlhttp;
+        if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp = new XMLHttpRequest();
+        } else { // code for IE6, IE5
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function (data) {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                var querydata = JSON.parse(xmlhttp.responseText);
+                var caselist = querydata.msg;
+                var money = 0;
+                for (var i = 0; i < caselist.length; i++) {
+                    var treatid = "treat" + i
+                    var treatname = caselist[i].treat_name;
+                    var amount = caselist[i].treat_count;
+                    var treatprice = caselist[i].charge;
+                    var note = caselist[i].treat_note;
+                    var casetext = "<tr id=\"" + treatid + "\"><td>" + treatname + "</td><td>" + amount + "</td><td>" + treatprice + "</td></tr>";
+                    $("#querytable").append(casetext);
+                    money = money + treatprice * amount;
+
+                }
+                $("#moneyout").html(money);
+                $("#moneyout2").html(money); 
+            }
+        } //回调函数
+
+        xmlhttp.open("get", "SearchTreat?patientID=" + patient_id, true);
+        xmlhttp.send();
+
+
+
+    }
+</script>
+<div class="container" >
+    <div class="row">
+        @Html.Partial("_PCenterLeftNav")
+        <div class="span9 ">
+            <div id="legend" class="">
+                <legend>
+                    <p style="margin-left: 30px">
+                        查看账单
+                    </p>
+                </legend>
+            </div>
+            <div class="well">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td colspan="4">
+                                <h4>
+                                    支出状况</h4>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <table class="table table-hover " >
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                名称
+                                            </th>
+                                            <th>
+                                                数量
+                                            </th>
+                                            <th>
+                                                单价
+                                            </th>
+                                           
+                                        </tr>
+                                    </thead>
+                                    <tbody id="querytable" >
+                                       
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <h4 class="pull-left">
+                                    支出总计</h4>
+                                <p class="pull-right" id="moneyout">
+                                    50000</p>
+                            </td>
+                        </tr>
+                     @*   <tr>
+                            <td colspan="4">
+                                <h4>
+                                    缴费状况</h4>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <table class="table table-hover ">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                时间
+                                            </th>
+                                            <th>
+                                                名称
+                                            </th>
+                                            <th>
+                                                价格
+                                            </th>
+                                            <th>
+                                                备注
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="moneytable">
+                                        <tr>
+                                            <td>
+                                                2013 7 6
+                                            </td>
+                                            <td>
+                                                缴费
+                                            </td>
+                                            <td>
+                                                850
+                                            </td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <h4 class="pull-left">
+                                    缴费总计</h4>
+                                <p class="pull-right" id="moneyin">
+                                    850</p>
+                            </td>
+                        </tr>*@
+                        <tr>
+                            <td colspan="3">
+                                <h4 class="pull-left">
+                                    总计</h4>
+                                <p class="pull-right" id="moneyout2">
+                                    0</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="row" style="padding-top: 20px">
+                    <div class="span3" style="padding-left: 300px">
+                        <a class=" btn btn-large btn btn-danger" href="@Url.Content("~/PCenter/index")">返回</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer class="footer">
+      <div class="container">
+        <p>由<a target="_blank">Prime</a>团队设计并完成.</p>
+        <p>我们遵循 <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License v2.0</a>, 以及 <a href="http://creativecommons.org/licenses/by/3.0/deed.zh" target="_blank">CC BY 3.0</a>.</p>
+        <p>本网站基于<a href="http://www.bootcss.com/">Bootstrap</a>设计，并全部遵循 <a href="http://creativecommons.org/licenses/by/3.0/deed.zh" target="_blank">CC BY 3.0</a>协议发布。</p>
+        <ul class="footer-links">
+          <li><a href="@Url.Content("~/Index/AboutUs")" target="_blank">关于我们</a></li>
+          <li class="muted">&middot;</li>
+          
+        
+          
+          <li>©2013 <a href="@Url.Content("~/Index/index")" target="_blank">Prime</a>版权所有</li>
+        </ul>
+      </div>
+</footer>

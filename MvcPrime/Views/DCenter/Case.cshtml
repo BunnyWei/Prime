@@ -1,0 +1,501 @@
+﻿@{
+    ViewBag.Title = "Case";
+    ViewBag.dCaseNav = "active";
+    ViewBag.naviCenter = "active";
+}
+<script type="text/javascript">
+    window.onload = function () {
+
+        //         alert(str);
+        //        var df=new DateFormat();//jsJava1.0需要使用DateFormat对象，不要弄错就是了 
+        //        df.applyPattern("yyyy-MM-dd HH:mm:ss"); 
+        //        var date=new Date(2007,3,30,10,59,51); 
+        //        var str=df.format(date); 
+        //        alert(getShortDateTimeString(date);//显示结果为：2007-04-30 10:59:51
+        // var treat1 = {"treat": { "treat_id": "1", "charge": "50", "treat_name": "拔牙A餐", "treat_note": "很痛" }, "count": "2" };
+        //    var treat2 = { "treat": { "treat_id": "2", "charge": "60", "treat_name": "拔牙AB餐", "treat_note": "很痛" }, "count": "3" };
+        // i = 1;
+        //treat1 = "{ \"treat\": { \"treat_name\": \"拔牙A餐\", \"treat_note\": \"很痛\" }, \"count\": \"2\" }";
+        //treat2 = "{ \"treat\": { \"treat_name\": \"拔牙B餐\", \"treat_note\": \"很痛\" }, \"count\": \"2\" }";
+        //test = { "test": [treat1, treat2] };
+        //alert(test);
+    }
+    var user_doctor_id; //存储用户id
+    //获取cookie中user_id的值
+    var strCookie = document.cookie;
+    var arrCookie = strCookie.split("&");
+    for (var i = 0; i < arrCookie.length; i++) {
+        var arr = arrCookie[i].split("=");
+        if ("user_id" == arr[0]) {
+            user_doctor_id = arr[1];
+        }
+    }
+    function getShortDateTimeString(date) {   //如：2011-07-29 13:30:50  
+        var year = date.getFullYear();
+        var month = date.getMonth();
+        var day = date.getDate();
+        month = month + 1;
+        if (month < 10) month = '0' + month;
+        if (day < 10) day = '0' + day;
+        var hour = date.getHours();
+        if (hour < 10) {
+            hour = '0' + hour;
+        }
+        var minute = date.getMinutes();
+        if (minute < 10) {
+            minute = '0' + minute;
+        }
+        var second = date.getSeconds();
+        if (second < 10) {
+            second = '0' + second;
+        }
+        //var str = year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second; 
+        var str = year + '-' + month + '-' + day;
+        return str;
+    }
+    function infoshow(case_id) {
+        //查看详情函数
+        $("#modaltable").empty();
+        var m_treat = caselist[case_id].treatWithCountList;
+        var m_doctorname = caselist[case_id].doctor.user_name;
+        var m_patientname = caselist[case_id].patient.user_name;
+        var m_casetime = caselist[case_id].case_gen_time;
+        var m_casenote = caselist[case_id].note;
+        
+        var m_unixtime = parseInt(new Date().valueOf(m_casetime) / 1000);
+        var m_normaltime = new Date(m_unixtime * 1000);
+        var m_date = getShortDateTimeString(m_normaltime);
+        $("#modalname").val(m_patientname);
+        $("#modaltime").val(m_date);
+        $("#modaltext").val(m_casenote);
+
+
+        for (i = 0; i < m_treat.length; i++) {
+            var m_treatname = m_treat[i].treat.treat_name;
+            var m_amount = m_treat[i].count;
+            var m_price = m_treat[i].treat.charge;
+            var modaltext = "<tr><td>" + m_treatname + "</td><td>" + m_amount + "</td><td>" + m_price + "</td></tr>";
+            $("#modaltable").append(modaltext);
+        }
+
+        $('#myModal').modal('show');
+    }
+
+    function casecreate() {//初始化新病例
+
+        var xmlhttp;
+        var account_name = $("#creatcaseinput").val();
+        if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp = new XMLHttpRequest();
+        } else { // code for IE6, IE5
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function (data) {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+
+                var createdata = JSON.parse(xmlhttp.responseText);
+                if (createdata.code == 0) {
+
+                    document.getElementById("creativeinputdiv").className = "control-group error ";
+                    $("#creativeinputdivp").html("<i class=\"icon-exclamation-sign help-block\">该帐号不存在</i>");
+                } else {
+                    createlist = createdata.msg;
+                    //for (var num = 0; num < createlist.length; num++) {
+                    // var caseid = createlist[num].case_id;
+                    //  var doctorname = createlist[num].doctor.user_name;
+                    var patientname = createlist[0].patient.user_name;
+                    //   var casetime = createlist[num].case_gen_time;
+                    //  var casenote = createlist[num].note;
+                    //  var unixtime = parseInt(new Date().valueOf(casetime) / 1000);
+                    //  var normaltime = new Date(unixtime * 1000);
+                    $("#casename").val(patientname);
+                    var time = new Date();
+                    var date = getShortDateTimeString(time);
+                    $("#casetime").val(date);
+                    $("#collapse2").collapse('show');
+                    document.getElementById("creativeinputdiv").className = "control-group  ";
+                    $("#creativeinputdivp").html("");
+
+                    //}
+
+                }
+            }
+        } //回调函数
+
+        xmlhttp.open("post", "getCaseDetialByPAccountName?account_name=" + account_name, true);
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.send();
+    }
+
+    function removetreat(id) {
+        $("#tr" + id).remove();
+    }
+    var i = 0;
+    function addtreat() { //添加治疗方案
+        var trid = "tr" + i;
+        var treatname = $("#treatinput").val();
+
+        var treatamount = $("#caseamount").val();
+        //        var treatprice=placeholder;
+        var treattext = "<tr id=\"" + trid + "\"><td>" + treatname + "</td><td>" + treatamount + "</td><td>3<button class=\"btn btn-small btn-danger pull-right\" onclick=\"removetreat(" + i + ");\">删除</button></td></tr>";
+        $("#treattable").append(treattext);
+        i = i + 1;
+    }
+
+    var querydata;
+    var caselist;
+    function query() { //查询函数
+        $("#querytable").empty();
+        document.getElementById("queryinputdiv").className = "control-group ";
+        $("#queryinputp").html("");
+
+        var xmlhttp;
+        var account_name = $("#queryinput").val();
+
+        if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp = new XMLHttpRequest();
+        } else { // code for IE6, IE5
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function (data) {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+
+                var querydata = JSON.parse(xmlhttp.responseText);
+                if (querydata.code == 0) {
+
+                    document.getElementById("queryinputdiv").className = "control-group error ";
+                    $("#queryinputp").html("<i class=\"icon-exclamation-sign help-block\">" + querydata.msg + "</i>");
+                } else {
+
+                    querydata = JSON.parse(xmlhttp.responseText);
+                    caselist = querydata.msg;
+                    for (var num = 0; num < caselist.length; num++) {
+
+                        var caseid = caselist[num].case_id;
+                        var doctorname = caselist[num].doctor.user_name;
+                        var patientname = caselist[num].patient.user_name;
+                        var casetime = caselist[num].case_gen_time;
+                        var casenote = caselist[num].note;
+
+                        var unixtime = parseInt(new Date().valueOf(casetime) / 1000);
+                        var normaltime = new Date(unixtime * 1000);
+                        var date = getShortDateTimeString(normaltime);
+                        var casetext = "<tr id=\"" + caseid + "\"><td>" + patientname + "</td><td>" + doctorname + "</td><td>" + date + "</td><td><button class=\"btn btn-small btn-info\" onclick=\"infoshow(" + num + ")\">点击查看详情</button></td></tr>";
+                        $("#querytable").append(casetext);
+                        $("#collapse1").collapse('show')
+
+                    }
+
+                }
+            }
+        } //回调函数
+
+        xmlhttp.open("post", "getCaseDetialByPAccountName?account_name=" + account_name, true);
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.send();
+    }
+    function amountplus() {//加减按钮
+        var num = parseInt($("#caseamount").val());
+        num = num + 1
+        $("#caseamount").val(num);
+
+
+    }
+    function amountminus() {//加减按钮
+        var num = parseInt($("#caseamount").val());
+        if (num != 1) {
+            num = num - 1;
+            $("#caseamount").val(num);
+        }
+    }
+    function casesubmit() {//提交新病历
+        $('#myModal1').modal('show');
+         setTimeout("location='@Url.Content("~/DCenter/Index")'", 1000);
+        var table = document.getElementById("treattable");
+        var row = table.rows.length;
+        var treatstr = "";
+        for (i = 1; i < row; i++) {
+            var treat_row = document.getElementById('treattable').rows[i].cells;
+            var treat_name = treat_row[0].innerHTML;
+            var treat_count = treat_row[1].innerHTML;
+            treatstr = treatstr + '[' + treat_name + " " + treat_count + ']';
+
+            //           var treat = { "treat": {  "treat_name": ""+treat_name+"", "treat_note": "很痛" }, "count": ""+count+"" }
+            //           var treat_str = JSON.stringify(treat);
+            //           var obj = JSON.parse(treat_str);
+            //         alert(obj.treat.treat_name);
+        }
+        // var x = { "treatWithCountList": [treatlist]};
+        // alert(x.treatWithCountList[1].count);
+        var xmlhttp;
+        if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp = new XMLHttpRequest();
+        } else { // code for IE6, IE5
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function (data) {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+
+            }
+        } //回调函数
+
+        var case_gen_time = $("#casetime").val();
+        var user_id = $("#creatcaseinput").val();
+        var note = $("#caseinfo").val();
+        var newcaseinfo = user_id + " " + user_doctor_id + " " + case_gen_time + " " + treatstr + " " + note;
+        
+        //var treat={"treat":{"treat_id":"1", "charge":"50", "treat_name":"拔牙A餐", "treat_note":"很痛"}, "count":"2"}
+        // alert(treat.treat.treat_id);
+        xmlhttp.open("post", "newcaseinfo", true);
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.send(newcaseinfo);
+
+
+    }
+
+
+</script>
+
+<div class="container">
+    <div class="row">
+        @Html.Partial("_DCenterLeftNav")
+        <div class="span9 ">
+            <legend style="border-bottom: 0px;">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#tab1" data-toggle="tab" style="font-size: 18px">病历查询</a></li>
+                    <li><a href="#tab2" data-toggle="tab" style="font-size: 18px">病历添加</a></li>
+                </ul>
+            </legend>
+            <div class="tabbable">
+                <!-- Only required for left/right tabs -->
+                <div class="well">
+                    <div class="tab-content" style="overflow: inherit">
+                        <div class="tab-pane active " id="tab1">
+                            <div class="row">
+                                <div class="control-group span3 " style="padding-left: 30px">
+                                    <!-- Text input-->
+                                    <p>
+                                        名称:
+                                    </p>
+                                    <div id="queryinputdiv" class="controls">
+                                        <input id="queryinput" type="text" placeholder="请输入账号名称" class="input" />
+                                        <p id="queryinputp" class="help-block">
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="span3" style="padding-top: 31px; padding-left: 20px">
+                                    <button id="querybtn" class=" btn  btn-primary" onclick="query()">
+                                        查询</button>
+                                </div>
+                            </div>
+                            <div id="collapse1" class="collapse ">
+                                <table class="table table-bordered ">
+                                    <thead>
+                                        <tr>
+                                            <th>患者姓名
+                                            </th>
+                                            <th>主治医师
+                                            </th>
+                                            <th>时间
+                                            </th>
+                                            <th>详情
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="querytable">
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="row" style="padding-top: 20px">
+                                <div class="span3" style="padding-left: 550px">
+                                    <a class=" btn  btn-danger" href="@Url.Content("~/DCenter/Index")">返回</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane " id="tab2">
+                            <div class="row">
+                                <div class="control-group span3 ">
+                                    <!-- Text input-->
+                                    <p>
+                                        患者账号:
+                                    </p>
+                                    <div class="control-group" id="creativeinputdiv">
+                                        <input type="text" placeholder="请输入账号" id="creatcaseinput"/>
+                                        <p class="help-block" id="creativeinputdivp">
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="control-group span3 " style="padding-top: 32px">
+                                    <button class="btn btn-primary" onclick="casecreate()">
+                                        创建病历</button>
+                                </div>
+                            </div>
+                            <div id="collapse2" class="collapse ">
+                                <div class="row">
+                                    <div class="span3">
+                                        <p>
+                                            姓名:
+                                        </p>
+                                        <input type="text" readonly id="casename" />
+                                    </div>
+                                    <div class="span3">
+                                        <p>
+                                            时间:
+                                        </p>
+                                        <input type="text" readonly id="casetime" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="span3">
+                                        <p>
+                                            治疗方案：
+                                        </p>
+                                        <input id="treatinput" type="text" data-provide="typeahead" data-source='["基本检查","麻醉","数字化X光片","前牙根管治疗","超声波洗牙","拔牙","普通烤瓷牙","贵金属瓷牙","补牙","牙齿美白","牙周药浴","畸形矫正"]' />
+                                    </div>
+                                    <div class="span3" style="width: 145px">
+                                        <p>
+                                            数量：
+                                        </p>
+                                        <button class="icon-plus btn btn-info" onclick="amountplus()"></button>
+                                        <input readonly type="text" class="span1" id="caseamount" value="1" />
+                                        <button class="icon-minus btn btn-danger" onclick="amountminus()"></button>
+                                    </div>
+                                    <div class="span1" style="padding-top: 34px; padding-left: 0px">
+                                        <button class="btn btn-success" onclick="addtreat()">
+                                            添加</button>
+                                    </div>
+                                    <div class="span8">
+                                        <table class="table table-striped" id="treattable">
+                                            <thead>
+                                                <tr>
+                                                    <th>名称
+                                                    </th>
+                                                    <th>数量
+                                                    </th>
+                                                    <th>单价
+                                                    </th>
+                                                </tr>
+
+                                            </thead>
+                                            <tbody id="treattable">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="span8">
+                                        <p>
+                                            病例详情：
+                                        </p>
+                                        <textarea rows="8" style="width: 650px;" id="caseinfo"></textarea>
+                                    </div>
+                                </div>
+                                <div class="row" style="padding-top: 20px">
+                                    <div class="span3" style="padding-left: 170px">
+                                        <button class=" btn   btn-success" onclick="casesubmit();">添加病例</button>
+                                    </div>
+                                    <div class="span3">
+                                        <a class=" btn  btn-danger" href="@Url.Content("~/DCenter/Index")">返回</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+            ×</button>
+        <h3 id="myModalLabel">病例详情</h3>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="span3">
+                <p>
+                    姓名:
+                </p>
+                <input type="text" readonly id="modalname" />
+            </div>
+            <div class="span3">
+                <p>
+                    时间:
+                </p>
+                <input type="text" readonly id="modaltime" />
+            </div>
+        </div>
+        <div class="row ">
+            <div class="span6">
+                <p>
+                    治疗方案：
+                </p>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>名称
+                            </th>
+                            <th>数量
+                            </th>
+                            <th>单价
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="modaltable">
+                      
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="span6">
+                <p>
+                    病例详情：
+                </p>
+                <textarea rows="8" style="width: 500px;" readonly id="modaltext">
+            
+    
+            </textarea>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-danger" data-dismiss="modal" aria-hidden="true">
+            关闭</button>
+    </div>
+</div>
+<div id="myModal1" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+            ×</button>
+        <h3 id="myModalLabel">提交成功！</h3>
+    </div>
+    <div class="modal-body">
+        <p>你已经成功添加病例</p>
+        
+        
+    </div>
+    <div class="modal-footer">
+        <a class="btn btn-success" data-dismiss="modal" aria-hidden="true" href="@Url.Content("~/DCenter/Index")">
+            关闭</a>
+    </div>
+</div>
+<footer class="footer">
+      <div class="container">
+        <p>由<a target="_blank">Prime</a>团队设计并完成.</p>
+        <p>我们遵循 <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License v2.0</a>, 以及 <a href="http://creativecommons.org/licenses/by/3.0/deed.zh" target="_blank">CC BY 3.0</a>.</p>
+        <p>本网站基于<a href="http://www.bootcss.com/">Bootstrap</a>设计，并全部遵循 <a href="http://creativecommons.org/licenses/by/3.0/deed.zh" target="_blank">CC BY 3.0</a>协议发布。</p>
+        <ul class="footer-links">
+          <li><a href="@Url.Content("~/Index/AboutUs")" target="_blank">关于我们</a></li>
+          <li class="muted">&middot;</li>
+          
+        
+          
+          <li>©2013 <a href="@Url.Content("~/Index/index")" target="_blank">Prime</a>版权所有</li>
+        </ul>
+      </div>
+</footer>

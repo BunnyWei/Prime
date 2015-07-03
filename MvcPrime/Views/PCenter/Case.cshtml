@@ -1,0 +1,261 @@
+﻿@{
+    ViewBag.Title = "Case";
+    ViewBag.naviCenter = "active";
+    ViewBag.pCaseNav = "active";
+}
+<script type="text/javascript">
+    var user_cookie_id; //存储用户id
+    //获取cookie中user_id的值
+    var strCookie = document.cookie;
+    var arrCookie = strCookie.split("&");
+    for (var i = 0; i < arrCookie.length; i++) {
+        var arr = arrCookie[i].split("=");
+        if ("user_id" == arr[0]) {
+            user_cookie_id = arr[1];
+        }
+    }
+
+    function getShortDateTimeString(date) {   //如：2011-07-29 13:30:50  
+        var year = date.getFullYear();
+        var month = date.getMonth();
+        var day = date.getDate();
+        month = month + 1;
+        if (month < 10) month = '0' + month;
+        if (day < 10) day = '0' + day;
+        var hour = date.getHours();
+        if (hour < 10) {
+            hour = '0' + hour;
+        }
+        var minute = date.getMinutes();
+        if (minute < 10) {
+            minute = '0' + minute;
+        }
+        var second = date.getSeconds();
+        if (second < 10) {
+            second = '0' + second;
+        }
+        //var str = year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second; 
+        var str = year + '-' + month + '-' + day;
+        return str;
+    }
+
+    var querydata;
+    var caselist;
+
+    function query(){
+        $("#querytable").empty();
+        var xmlhttp;
+        var account_name = $("#queryinput").val();
+        if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp = new XMLHttpRequest();
+        } else { // code for IE6, IE5
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function (data) {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+
+                var querydata = JSON.parse(xmlhttp.responseText);
+                if (querydata.code == 0) {
+
+                } else {
+                    querydata = JSON.parse(xmlhttp.responseText);
+                    caselist = querydata.msg;
+                    for (var num = 0; num < caselist.length; num++) {
+
+                        var caseid = caselist[num].case_id;
+                        var doctorname = caselist[num].doctor.user_name;
+                        var patientname = caselist[num].patient.user_name;
+                        var casetime = caselist[num].case_gen_time;
+                        var casenote = caselist[num].note;
+                        var unixtime = parseInt(new Date().valueOf(casetime) / 1000);
+                        var normaltime = new Date(unixtime * 1000);
+                        var date = getShortDateTimeString(normaltime);
+                        var casetext = "<tr id=\"" + caseid + "\"><td>" + patientname + "</td><td>" + doctorname + "</td><td>" + date + "</td><td><button class=\"btn btn-small btn-info\" onclick=\"infoshow(" + num + ")\">点击查看详情</button></td></tr>";
+                        $("#querytable").append(casetext);
+
+
+                    }
+
+                }
+            }
+        } //回调函数
+
+        xmlhttp.open("get", "../Dcenter/getCaseDetialByPAccountName?account_name=" + account_name, true);
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.send();
+    }
+
+
+
+    function infoshow(case_id) {
+        //查看详情函数
+        $("#modaltable").empty();
+        var m_treat = caselist[case_id].treatWithCountList;
+        var m_doctorname = caselist[case_id].doctor.user_name;
+        var m_patientname = caselist[case_id].patient.user_name;
+        var m_casetime = caselist[case_id].case_gen_time;
+        var m_casenote = caselist[case_id].note;
+
+        var m_unixtime = parseInt(new Date().valueOf(m_casetime) / 1000);
+        var m_normaltime = new Date(m_unixtime * 1000);
+        var m_date = getShortDateTimeString(m_normaltime);
+        $("#modalname").val(m_patientname);
+        $("#modaltime").val(m_date);
+        $("#modaltext").val(m_casenote);
+
+
+        for (i = 0; i < m_treat.length; i++) {
+            var m_treatname = m_treat[i].treat.treat_name;
+            var m_amount = m_treat[i].count;
+            var m_price = m_treat[i].treat.charge;
+            var modaltext = "<tr><td>" + m_treatname + "</td><td>" + m_amount + "</td><td>" + m_price + "</td></tr>";
+            $("#modaltable").append(modaltext);
+        }
+
+        $('#myModal').modal('show');
+    }
+
+
+
+
+
+
+</script>
+<div class="container">
+    <div class="row">
+        @Html.Partial("_PCenterLeftNav")
+        <div class="span9 ">
+            <div id="legend" class="">
+                <legend>
+                    <p style="margin-left: 30px">
+                        查看病例
+                    </p>
+                </legend>
+            </div>
+            <div class="well">
+            <div class="row">
+                                <div class="control-group span3 " style="padding-left: 30px">
+                                    <!-- Text input-->
+                                    <p>
+                                        名称:
+                                    </p>
+                                    <div id="queryinputdiv" class="controls">
+                                        <input id="queryinput" type="text" placeholder="请输入账号名称" class="input" />
+                                        <p id="queryinputp" class="help-block">
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="span3" style="padding-top: 31px; padding-left: 20px">
+                                    <button id="querybtn" class=" btn  btn-primary" onclick="query()">
+                                        查询</button>
+                                </div>
+                            </div>
+                <table class="table table-hover ">
+                    <thead>
+                        <tr>
+                            <th>
+                                患者姓名
+                            </th>
+                            <th>
+                                主治医生
+                            </th>
+                            <th>
+                                时间
+                            </th>
+                            <th>
+                                详情
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="querytable">
+                    </tbody>
+                </table>
+                <div class="row" style="padding-top: 20px">
+                <div class="span3" style="padding-left: 300px">
+                    <a class=" btn btn-large btn btn-danger"  href="@Url.Content("~/PCenter/Index")">返回</a>
+                </div>
+            </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+            ×</button>
+        <h3 id="myModalLabel">
+            病例详情</h3>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="span3">
+                <p>
+                    姓名:
+                </p>
+                <input type="text" readonly id="modalname" />
+            </div>
+            <div class="span3">
+                <p>
+                    时间:
+                </p>
+                <input type="text" readonly id="modaltime" />
+            </div>
+        </div>
+        <div class="row ">
+            <div class="span6">
+                <p>
+                    治疗方案：
+                </p>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>
+                                名称
+                            </th>
+                            <th>
+                                数量
+                            </th>
+                            <th>
+                                单价
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="modaltable">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="span6">
+                <p>
+                    病例详情：
+                </p>
+                <textarea rows="8" style="width: 500px;" readonly id="modaltext">
+            
+    
+            </textarea>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-danger" data-dismiss="modal" aria-hidden="true">
+            关闭</button>
+    </div>
+</div>
+<footer class="footer">
+      <div class="container">
+        <p>由<a target="_blank">Prime</a>团队设计并完成.</p>
+        <p>我们遵循 <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License v2.0</a>, 以及 <a href="http://creativecommons.org/licenses/by/3.0/deed.zh" target="_blank">CC BY 3.0</a>.</p>
+        <p>本网站基于<a href="http://www.bootcss.com/">Bootstrap</a>设计，并全部遵循 <a href="http://creativecommons.org/licenses/by/3.0/deed.zh" target="_blank">CC BY 3.0</a>协议发布。</p>
+        <ul class="footer-links">
+          <li><a href="@Url.Content("~/Index/AboutUs")" target="_blank">关于我们</a></li>
+          <li class="muted">&middot;</li>
+          
+        
+          
+          <li>©2013 <a href="@Url.Content("~/Index/index")" target="_blank">Prime</a>版权所有</li>
+        </ul>
+      </div>
+</footer>

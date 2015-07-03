@@ -1,0 +1,83 @@
+﻿@using MvcPrime.Models.Service;
+@using MvcPrime.Models;
+@{  
+    bool isLog = false;
+    String userName = "登录";
+
+    String user_id = "";
+    String logUrl = Url.Content("~/Login/Login");
+    String currentUrl = Request.Url.ToString();
+    HttpCookie cookies = Request.Cookies.Get("Log");
+    String logout = "collapse";
+    String centerUrl = Url.Content("~/Login/Login");
+    if (cookies != null)
+    {
+        if (cookies["isLog"] == "true")
+        {
+            isLog = true;
+            user_id = cookies["user_id"];
+        }
+    }
+    if (isLog)
+    {
+        PatientLogin pl = new PatientLogin();
+        user_info_table u = pl.isUserExist(Convert.ToInt64(user_id));
+        logout = "visable";
+        if (u.user_type == 1)
+        {
+            userName = u.user_name + ", 欢迎您";
+            logUrl = Url.Content("~/PCenter/index");
+            centerUrl = Url.Content("~/PCenter/index");
+        }
+        else if (u.user_type == 2)
+        {
+            userName = u.user_name + "医生, 欢迎您";
+            logUrl = Url.Content("~/DCenter/index");
+            centerUrl = Url.Content("~/DCenter/index");
+        }
+        else if (u.user_type == 3)
+        {
+            userName = u.user_name + "管理员, 欢迎您";
+            logUrl = Url.Content("~/ACenter/index");
+            centerUrl = Url.Content("~/ACenter/index");
+        }
+
+    }
+}
+<script type="text/javascript">
+    function delCookie() {
+        var name = "Log";
+        var date = new Date();
+        date.setTime(date.getTime() - 1000);
+        document.cookie = name + "=a; expires=" + date.toGMTString() + ";path=/";
+        window.location.reload();
+
+    }
+</script>
+<div class="container">
+    <div class="page-header" style="  padding-bottom: 0; margin-bottom: 0px;
+        margin-top: 0px">
+        <h1 style=" font-weight:lighter;font-size: 50px;" align="left">
+            <a href="@Url.Content("~/Index/Index")">
+                <img alt="primelogo" src="@Url.Content("~/img/primelogo.gif")" width="110" height="110" /></a>
+            Prime Clinic
+        </h1>
+    </div>
+    <div class="navbar" style="margin-top: 0px">
+        <div class="navbar-inner">
+            <a class="brand" href="@Url.Content("~/Index/Index")">Prime</a>
+            <ul class="nav">
+                <li class="@ViewBag.naviHome"><a href="@Url.Content("~/Index/Index")">首页</a></li>
+                <li class="@ViewBag.naviCenter"><a href="@centerUrl">用户中心</a></li>
+                <li class="@ViewBag.naviDoctor"><a href="@Url.Content("~/Index/ClinicDoctor")">医师队伍</a></li>
+                <li class="@ViewBag.naviTreat"><a href="@Url.Content("~/Index/ClinicFee")">医疗服务</a></li>
+                <li class="@ViewBag.naviInfo"><a href="@Url.Content("~/Index/ClinicInfo")">医院概况</a></li>
+                <li class="@ViewBag.naviAbout"><a href="@Url.Content("~/Index/AboutUs")">关于我们</a></li>
+            </ul>
+            <div class="navbar-form pull-right">
+                <a class="btn btn-success" href="@logUrl">@userName</a> <a class="btn btn-danger" onclick="delCookie()" style="visibility:@logout" href="@Url.Content("~/Index/Index")">
+                    退出</a>
+            </div>
+        </div>
+    </div>
+</div>

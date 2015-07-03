@@ -1,0 +1,107 @@
+﻿@using MvcPrime.Models;
+@using MvcPrime.Models.Service;
+@{
+        ViewBag.Title = "Res";
+        ViewBag.dResNav = "active";
+        ViewBag.naviCenter = "active";
+
+        List<book_info_table> bookList = new List<book_info_table>();
+        user_info_table user = new user_info_table();
+        HttpCookie cookies = Request.Cookies.Get("Log");
+        if (cookies != null)
+        {
+            if (cookies["isLog"] == "true")
+            {
+                String  user_id = cookies["user_id"];
+                PatientLogin pl =new PatientLogin();
+                user= pl.getUserById(Convert.ToInt64(user_id)); 
+                BookService bs = new BookService();
+                bookList=  bs.getBookByPatientId(Convert.ToInt64(user_id));
+            }
+        }
+    }
+<div class="container">
+    <div class="row">
+       @Html.Partial("_DCenterLeftNav")
+        <div class="span9 ">
+            <div id="legend" class="">
+                <legend>
+                    <p style="margin-left: 30px">
+                        查看我的预约
+                    </p>
+                </legend>
+            </div>
+            <div class="well ">
+                <table class="table table-hover ">
+                    <thead>
+                        <tr>
+                            <th>
+                                患者名称
+                            </th>
+                            <th>
+                                预约时间
+                            </th>
+                            <th>
+                                预约状态
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (book_info_table b in bookList )
+                    {
+                         <tr>
+                            <td>
+                                @user.user_name
+                            </td>
+                            <td>
+                               @b.book_time
+                            </td>
+                            <td>
+                                  @b.book_state
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+                <div class="row" style="padding-top: 20px">
+                    <div class="span3" style="padding-left: 550px">
+                        <a class=" btn btn-large btn btn-danger" href="#">返回</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="../js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+<script type="text/javascript" src="../js/locales/bootstrap-datetimepicker.zh-CN.js"
+    charset="UTF-8"></script>
+<script type="text/javascript">
+
+    $('.form_date').datetimepicker({
+        language: 'zh-CN',
+        weekStart: 1,
+        todayBtn: 1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        minView: 2,
+        forceParse: 0
+    });
+        
+</script>
+<footer class="footer">
+      <div class="container">
+        <p>由<a target="_blank">Prime</a>团队设计并完成.</p>
+        <p>我们遵循 <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License v2.0</a>, 以及 <a href="http://creativecommons.org/licenses/by/3.0/deed.zh" target="_blank">CC BY 3.0</a>.</p>
+        <p>本网站基于<a href="http://www.bootcss.com/">Bootstrap</a>设计，并全部遵循 <a href="http://creativecommons.org/licenses/by/3.0/deed.zh" target="_blank">CC BY 3.0</a>协议发布。</p>
+        <ul class="footer-links">
+          <li><a href="@Url.Content("~/Index/AboutUs")" target="_blank">关于我们</a></li>
+          <li class="muted">&middot;</li>
+          
+        
+          
+          <li>©2013 <a href="@Url.Content("~/Index/index")" target="_blank">Prime</a>版权所有</li>
+        </ul>
+      </div>
+</footer>

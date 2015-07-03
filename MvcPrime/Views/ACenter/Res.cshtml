@@ -1,0 +1,122 @@
+﻿@{
+    ViewBag.Title = "Res";
+    ViewBag.naviCenter = "active";
+    ViewBag.aResNav = "active";
+}
+<script type="text/javascript">
+
+    window.onload = function () {
+        
+        $("#querytable").empty();
+        
+        var xmlhttp;
+        if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp = new XMLHttpRequest();
+        } else { // code for IE6, IE5
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function (data) {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+
+                var querydata = JSON.parse(xmlhttp.responseText);
+                var querydata = JSON.parse(xmlhttp.responseText);
+                var caselist = querydata.msg;
+                for (var i = 0; i < caselist.length; i++) {
+                    var accounttname = caselist[i].account_name;
+                    var accountpwd = caselist[i].pwd;
+                    var username = caselist[i].user_name;
+                    var accounttype = caselist[i].user_type;
+                    if (accounttype == 3) {
+                        var type = "管理员";
+                    }
+                    else { 
+                    type = "医生"; 
+                    }
+                    var casetext = "<tr ><td>" + type + "</td><td>" + accounttname + "</td><td>" + accountpwd + "</td><td>" + username + "</td></tr>";
+                    $("#querytable").append(casetext);
+                }
+
+            }
+        }  //回调函数
+
+        xmlhttp.open("get", "getUser23", true);
+        xmlhttp.send();
+    }
+
+</script>
+<div class="container">
+    <div class="row">
+        @Html.Partial("_ACenterLeftNav")
+        <div class="span9 ">
+            <div id="legend" class="">
+                <legend>
+                    <p style="margin-left: 30px">
+                        账号系统
+                    </p>
+                </legend>
+            </div>
+            <div class="well">
+                @*<div class="row">
+                    <div class="control-group span3 " style="padding-left: 50px">
+                        <!-- Text input-->
+                        <p>
+                            名称:
+                        </p>
+                        <div class="controls">
+                            <input type="text" placeholder="请输入医生或患者名称" class="input">
+                            <p class="help-block">
+                            </p>
+                        </div>
+                    </div>
+                    <div class="span3" style="padding-top: 33px; padding-left: 60px">
+                        <a class=" btn  btn-info">查询</a>
+                    </div>
+                </div>*@
+                <table class="table table-hover table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>
+                                类型
+                            </th>
+                            <th>
+                                账号
+                            </th>
+                            <th>
+                                密码
+                            </th>
+                            <th>
+                                姓名
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="querytable">
+                    </tbody>
+                </table>
+                <div class="row" style="padding-top: 20px">
+                    
+                    <div class="span3" style="padding-left: 250px">
+                        <div>
+                            <a style="font-size: 20px" type="button" class=" btn   btn-danger  btn-large"
+                                href="@Url.Content("~/ACenter/Index")">返回</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer class="footer">
+      <div class="container">
+        <p>由<a target="_blank">Prime</a>团队设计并完成.</p>
+        <p>我们遵循 <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License v2.0</a>, 以及 <a href="http://creativecommons.org/licenses/by/3.0/deed.zh" target="_blank">CC BY 3.0</a>.</p>
+        <p>本网站基于<a href="http://www.bootcss.com/">Bootstrap</a>设计，并全部遵循 <a href="http://creativecommons.org/licenses/by/3.0/deed.zh" target="_blank">CC BY 3.0</a>协议发布。</p>
+        <ul class="footer-links">
+          <li><a href="@Url.Content("~/Index/AboutUs")" target="_blank">关于我们</a></li>
+          <li class="muted">&middot;</li>
+          
+        
+          
+          <li>©2013 <a href="@Url.Content("~/Index/index")" target="_blank">Prime</a>版权所有</li>
+        </ul>
+      </div>
+</footer>

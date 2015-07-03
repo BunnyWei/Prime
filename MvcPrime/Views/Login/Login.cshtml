@@ -1,0 +1,144 @@
+﻿@{
+    ViewBag.Title = "Login";
+}
+<script language="javascript" type="text/javascript">
+    var codeval = 0;
+    function upperCase() {
+        var x = document.getElementById("inputCode").value;
+        document.getElementById("inputCode").value = x.toUpperCase();
+        var inputCode = document.getElementById("inputCode").value;
+        if (inputCode != code) {
+            codeval = 0;
+            document.getElementById("codediv").className = "control-group error";
+            $("#codedivp").html("验证码错误");
+            document.getElementById("codedivp").className = "icon-exclamation-sign help-block"
+        }
+        else {
+            codeval = 1;
+            document.getElementById("codediv").className = "control-group ";
+            $("#codedivp").html("");
+            document.getElementById("codedivp").className = ""
+        }
+    }
+    var code; //在全局 定义验证码
+    function createCode() {
+        code = "";
+        var codeLength = 6; //验证码的长度
+        var checkCode = document.getElementById("checkCode");
+        var selectChar = new Array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'); //所有候选组成验证码的字符，当然也可以用中文的
+        for (var i = 0; i < codeLength; i++) {
+            var charIndex = Math.floor(Math.random() * 36);
+            code += selectChar[charIndex];
+        }
+        if (checkCode) {
+            checkCode.className = "code";
+            checkCode.value = code;
+        }
+    }
+
+    function loginRes() {
+        if (codeval == 0) {
+            $("form").submit(function () {
+                document.getElementById("codediv").className = "control-group error";
+                $("#codedivp").html("验证码错误");
+                document.getElementById("codedivp").className = "icon-exclamation-sign help-block"
+                return false;
+            });
+        }
+        else {
+            $("form").submit(function () {
+                document.getElementById("codediv").className = "control-group ";
+                $("#codedivp").html("");
+                // 提交表单
+                var xmlhttp;
+                var Login = $("form").serialize();
+                if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+                    xmlhttp = new XMLHttpRequest();
+                }
+                else {// code for IE6, IE5
+                    xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+                }
+                xmlhttp.onreadystatechange = function () {
+                    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                        var json = JSON.parse(xmlhttp.responseText);
+                        if (json.code == 1) {
+                            window.top.location = "@Url.Content("~/Index/Index")";
+                } else {
+                    document.getElementById("logininput").className = "control-group error";
+                     document.getElementById("divp").className = " control-group error";
+                $("#codedivp").html("用户名密码错误");
+                document.getElementById("codedivp").className = "icon-exclamation-sign help-block"
+                }
+            } //回调函数
+            }
+            xmlhttp.open("POST", "@Url.Content("~/Login/Login")", true);
+            xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xmlhttp.send(Login);
+
+            // 为了防止页面刷新 返回false
+            return false;
+        });
+    }
+}
+
+
+
+</script>
+<div style="margin-left: auto; margin-right: auto; background-image: url('../img/login.gif');
+    width: 900px; height: 720px;">
+    <div class="container" style="padding: 15px 15px 15px 15px; width: 350px;">
+        <div class="well well-large" style="margin-top: 70px;">
+            <form class="form-signin" action="@Url.Content("~/Login/addUser")" >
+            <h2 class="form-signin-heading " align="center">
+                输入账号密码</h2>
+            <div align="center">
+                <label class="radio inline" style="text-align: left;">
+                    <input type="radio" id="radio1" name="user_type" value="1" checked />用户</label>
+                <label class="radio inline" style="text-align: left">
+                    <input type="radio" id="radio2" name="user_type" value="2" />医生</label>
+                <label class="radio inline" style="text-align: left">
+                    <input type="radio" id="radio3" name="user_type" value="3" />管理员</label>
+            </div>
+            <br />
+            <div id="logininput">
+            <input type="text" class="input-block-level" placeholder="用户名" name="account_name"
+                required />
+            <p class="help-block">
+            </p>
+            <input type="password" class="input-block-level" placeholder="密码" name="pwd" required />
+            <p class="help-block">
+            </p>
+            </div>
+            <div id="codediv" class="control-group ">
+                <input type="text" onfocus="createCode()" onblur="upperCase()" id="inputCode" style="width: 70px"
+                    placeholder="验证码" />
+                <input type="text" id="checkCode" style="width: 70px" value="" readonly disabled /><br />
+                <div id="divp">
+                    <i id="codedivp"></i>
+                </div>
+            </div>
+            <button class="btn btn-block btn-primary btn-large" type="submit" onclick="loginRes()">
+                登&nbsp;&nbsp; 录</button>
+            <p class="text-center" style="margin-top: 10px">
+                <a href="@Url.Content("~/Login/Register")" style="text-decoration: underline" class="text-success">
+                    没有账号？</a>
+            </p>
+            </form>
+        </div>
+    </div>
+</div>
+<footer class="footer">
+      <div class="container">
+        <p>由<a target="_blank">Prime</a>团队设计并完成.</p>
+        <p>我们遵循 <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License v2.0</a>, 以及 <a href="http://creativecommons.org/licenses/by/3.0/deed.zh" target="_blank">CC BY 3.0</a>.</p>
+        <p>本网站基于<a href="http://www.bootcss.com/">Bootstrap</a>设计，并全部遵循 <a href="http://creativecommons.org/licenses/by/3.0/deed.zh" target="_blank">CC BY 3.0</a>协议发布。</p>
+        <ul class="footer-links">
+          <li><a href="@Url.Content("~/Index/AboutUs")" target="_blank">关于我们</a></li>
+          <li class="muted">&middot;</li>
+          
+        
+          
+          <li>©2013 <a href="@Url.Content("~/Index/index")" target="_blank">Prime</a>版权所有</li>
+        </ul>
+      </div>
+</footer>
